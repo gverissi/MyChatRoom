@@ -9,7 +9,6 @@ import {AuthService} from '../../services/auth/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  isLoggedIn: boolean;
   formGroup: FormGroup;
 
   constructor(private authService: AuthService) {
@@ -17,9 +16,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.getAuthState().subscribe(user => {
-      this.isLoggedIn = !!user;
-    });
   }
 
   private createForm(): void {
@@ -44,13 +40,6 @@ export class LoginComponent implements OnInit {
     const email = this.formGroup.value.email;
     const password = this.formGroup.value.password;
     this.authService.logIn(email, password).then(
-      value => console.log('value = ', value),
-      reason => console.log('reason = ', reason)
-    );
-  }
-
-  onClickLogOutUser(): void {
-    this.authService.logOut().then(
       value => console.log('value = ', value),
       reason => console.log('reason = ', reason)
     );
