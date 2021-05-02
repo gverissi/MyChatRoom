@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth/auth.service';
+import {UserDaoService} from '../../services/user-dao/user-dao.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,12 +10,29 @@ import {AuthService} from '../../services/auth/auth.service';
 export class NavbarComponent implements OnInit {
 
   isLoggedIn: boolean;
+  userName: string;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private userDao: UserDaoService) { }
 
   ngOnInit(): void {
     this.authService.getAuthState().subscribe(user => {
-      this.isLoggedIn = !!user;
+      if (user) {
+        this.isLoggedIn = true;
+        console.log('email = ', user.email);
+        this.userDao.findByEmail(user.email).subscribe(doc => {
+          if (doc.exists) {
+            console.log('Document data:', doc.data());
+            this.userName = doc.data().name;
+          } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+          }
+        });
+      } else {
+        this.isLoggedIn = false;
+        this.userName = 'not-logged';
+      }
+      // this.isLoggedIn = !!user;
     });
   }
 
