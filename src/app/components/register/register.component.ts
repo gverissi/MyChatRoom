@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
 import {Router} from '@angular/router';
+import {UserDaoService} from '../../services/user-dao/user-dao.service';
+import {User} from '../../entities/user/user';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +14,7 @@ export class RegisterComponent implements OnInit {
 
   userRegisterForm: FormGroup;
 
-  constructor(public authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, private userDao: UserDaoService) {
     this.createForm();
   }
 
@@ -48,7 +50,7 @@ export class RegisterComponent implements OnInit {
     const email = this.userRegisterForm.value.email;
     const password = this.userRegisterForm.value.password;
     this.authService.register(name, email, password).then(
-      () => this.router.navigate(['/log-in']),
+      () => this.userDao.save(email, new User(name, true)).then(() => this.router.navigate(['/log-in'])),
       (error) => console.log(error)
     );
   }

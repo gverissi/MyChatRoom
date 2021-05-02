@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     const email = this.userLoginForm.value.email;
     const password = this.userLoginForm.value.password;
     this.authService.logIn(email, password).then(
-      value => console.log('value = ', value),
+      value => console.log('value on login = ', value),
       reason => console.log('reason = ', reason)
     );
   }

@@ -2,7 +2,7 @@
 <div class="navbar">
   <a routerLink="/home">Home</a>
   <div *ngIf="isLoggedIn" class="dropdown">
-    <button class="drop-btn">Dropdown</button>
+    <button class="drop-btn">{{userName}}</button>
     <div class="dropdown-content">
       <a routerLink="/account">Account</a>
       <a routerLink="/log-out" (click)="onClickLogOutUser()">Log Out</a>
