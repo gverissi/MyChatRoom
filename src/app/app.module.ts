@@ -6,10 +6,12 @@ import { RegisterComponent } from './components/register/register.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import {RouterModule, Routes} from '@angular/router';
+import { LoginComponent } from './components/login/login.component';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'log-in', component: LoginComponent},
   {path: '**', component: HomeComponent}
 ];
 
@@ -17,7 +19,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,17 @@
+<form [formGroup]="formGroup">
+  <div>
+    <label for="email">Email :</label>
+    <input [ngClass]="{'form-control': true, 'is-invalid': emailValidity()}" id="email" type="email" formControlName="email">
+  </div>
+  <div *ngIf="emailValidity()">Name must be a least 6 characters</div>
+
+  <div>
+    <label for="password">Mot de passe :</label>
+    <input [ngClass]="{'form-control': true, 'is-invalid': passwordValidity()}" id="password" type="password" formControlName="password">
+  </div>
+  <div *ngIf="passwordValidity()">Password must be a least 6 characters</div>
+
+  <div>
+    <button type="button" (click)="logInUser()">Log-In</button>
+  </div>
+</form>
