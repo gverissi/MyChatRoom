@@ -1,23 +1,32 @@
-<form [formGroup]="formGroup">
-  <div>
-    <label for="name">Name :</label>
-    <input [ngClass]="{'form-control': true, 'is-invalid': nameValidity()}" id="name" type="text" formControlName="name">
-  </div>
-  <div *ngIf="emailValidity()">Name must be a least 3 characters</div>
 
-  <div>
-    <label for="email">Email :</label>
-    <input [ngClass]="{'form-control': true, 'is-invalid': emailValidity()}" id="email" type="email" formControlName="email">
-  </div>
-  <div *ngIf="emailValidity()">Name must be a least 6 characters</div>
+<div class="container">
+  <form [formGroup]="userRegisterForm">
 
-  <div>
-    <label for="password">Mot de passe :</label>
-    <input [ngClass]="{'form-control': true, 'is-invalid': passwordValidity()}" id="password" type="password" formControlName="password">
-  </div>
-  <div *ngIf="passwordValidity()">Password must be a least 6 characters</div>
+    <div class="form-control">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name">
+      <span *ngIf="nameNotValid()">Name must be a least 3 characters long</span>
+      <span class="hidden">hidden</span>
+    </div>
 
-  <div>
-    <button type="button" (click)="registerNewUser()">Register</button>
-  </div>
-</form>
+    <div class="form-control">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email">
+      <span *ngIf="emailNotValid()">Email must be a least 6 characters long</span>
+      <span class="hidden">hidden</span>
+    </div>
+
+    <div class="form-control">
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password">
+      <span *ngIf="passwordNotValid()">Password must be a least 6 characters long</span>
+      <span class="hidden">hidden</span>
+    </div>
+
+    <div class="form-control">
+      <button type="button" (click)="registerNewUser()" [disabled]="userRegisterForm.invalid" [ngClass]="{'is-invalid': userRegisterForm.invalid}">Register</button>
+    </div>
+
+  </form>
+</div>
+

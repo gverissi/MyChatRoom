@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
 
-  formGroup: FormGroup;
+  userRegisterForm: FormGroup;
 
   constructor(public authService: AuthService, private router: Router) {
     this.createForm();
@@ -20,33 +20,33 @@ export class RegisterComponent implements OnInit {
   }
 
   private createForm(): void {
-    this.formGroup = new FormGroup(
+    this.userRegisterForm = new FormGroup(
       {
-        name: new FormControl('', [Validators.required, Validators.min(3)]),
-        email: new FormControl('', [Validators.required, Validators.min(6)]),
-        password: new FormControl('', [Validators.required, Validators.min(6)])
+        name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+        email: new FormControl('', [Validators.required, Validators.minLength(6)]),
+        password: new FormControl('', [Validators.required, Validators.minLength(6)])
       });
   }
 
-  nameValidity(): boolean {
-    return this.formGroup.controls.name.invalid &&
-      (this.formGroup.controls.name.dirty || this.formGroup.controls.name.touched);
+  nameNotValid(): boolean {
+    return this.userRegisterForm.controls.name.invalid &&
+      (this.userRegisterForm.controls.name.dirty || this.userRegisterForm.controls.name.touched);
   }
 
-  emailValidity(): boolean {
-    return this.formGroup.controls.email.invalid &&
-      (this.formGroup.controls.email.dirty || this.formGroup.controls.email.touched);
+  emailNotValid(): boolean {
+    return this.userRegisterForm.controls.email.invalid &&
+      (this.userRegisterForm.controls.email.dirty || this.userRegisterForm.controls.email.touched);
   }
 
-  passwordValidity(): boolean {
-    return this.formGroup.controls.password.invalid &&
-      (this.formGroup.controls.password.dirty || this.formGroup.controls.password.touched);
+  passwordNotValid(): boolean {
+    return this.userRegisterForm.controls.password.invalid &&
+      (this.userRegisterForm.controls.password.dirty || this.userRegisterForm.controls.password.touched);
   }
 
   registerNewUser(): void {
-    const name = this.formGroup.value.name;
-    const email = this.formGroup.value.email;
-    const password = this.formGroup.value.password;
+    const name = this.userRegisterForm.value.name;
+    const email = this.userRegisterForm.value.email;
+    const password = this.userRegisterForm.value.password;
     this.authService.register(name, email, password).then(
       () => this.router.navigate(['/log-in']),
       (error) => console.log(error)

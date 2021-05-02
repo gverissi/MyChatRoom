@@ -1,17 +1,24 @@
-<form [formGroup]="formGroup">
-  <div>
-    <label for="email">Email :</label>
-    <input [ngClass]="{'form-control': true, 'is-invalid': emailValidity()}" id="email" type="email" formControlName="email">
-  </div>
-  <div *ngIf="emailValidity()">Name must be a least 6 characters</div>
 
-  <div>
-    <label for="password">Mot de passe :</label>
-    <input [ngClass]="{'form-control': true, 'is-invalid': passwordValidity()}" id="password" type="password" formControlName="password">
-  </div>
-  <div *ngIf="passwordValidity()">Password must be a least 6 characters</div>
+<div class="container">
+  <form [formGroup]="userLoginForm">
 
-  <div>
-    <button type="button" (click)="onClickLogInUser()">Log-In</button>
-  </div>
-</form>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email">
+      <span *ngIf="emailNotValid()">Email must be a least 6 characters long</span>
+      <span class="hidden">hidden</span>
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password">
+      <span *ngIf="passwordValidity()">Password must be a least 6 characters long</span>
+      <span class="hidden">hidden</span>
+    </div>
+
+    <div>
+      <button type="button" (click)="onClickLogInUser()" [disabled]="userLoginForm.invalid">Log-In</button>
+    </div>
+
+  </form>
+</div>
