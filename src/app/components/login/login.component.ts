@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
 
@@ -9,13 +9,17 @@ import {AuthService} from '../../services/auth/auth.service';
 })
 export class LoginComponent implements OnInit {
 
+  isLoggedIn: boolean;
   formGroup: FormGroup;
 
-  constructor(public authService: AuthService) {
+  constructor(private authService: AuthService) {
     this.createForm();
   }
 
   ngOnInit(): void {
+    this.authService.getAuthState().subscribe(user => {
+      this.isLoggedIn = !!user;
+    });
   }
 
   private createForm(): void {
@@ -36,8 +40,20 @@ export class LoginComponent implements OnInit {
       (this.formGroup.controls.password.dirty || this.formGroup.controls.password.touched);
   }
 
-  logInUser(): void {
-    this.authService.logIn(this.formGroup.value.name, this.formGroup.value.email, this.formGroup.value.password);
+  onClickLogInUser(): void {
+    const email = this.formGroup.value.email;
+    const password = this.formGroup.value.password;
+    this.authService.logIn(email, password).then(
+      value => console.log('value = ', value),
+      reason => console.log('reason = ', reason)
+    );
+  }
+
+  onClickLogOutUser(): void {
+    this.authService.logOut().then(
+      value => console.log('value = ', value),
+      reason => console.log('reason = ', reason)
+    );
   }
 
 }
