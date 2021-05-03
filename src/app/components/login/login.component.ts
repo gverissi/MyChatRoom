@@ -12,11 +12,16 @@ export class LoginComponent implements OnInit {
 
   userLoginForm: FormGroup;
   customer: Customer;
+  compeur = 0;
 
   constructor(public authService: AuthService) {
+    // this.compeur = 0;
+    console.log('login construcor');
   }
 
   ngOnInit(): void {
+    console.log('login ngOnInit()');
+    this.compeur++;
     this.createForm();
     // this.customer = JSON.parse(localStorage.getItem('customer'));
     // this.customer = this.authService.customer;

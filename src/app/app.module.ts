@@ -15,12 +15,18 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { environment } from '../environments/environment';
+import { MessageComponent } from './components/message/message.component';
+import { MessagesComponent } from './components/messages/messages.component';
+import { CustomersComponent } from './components/customers/customers.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'log-in', component: LoginComponent},
-  {path: '**', component: HomeComponent}
+  {path: 'dashboard', component: DashboardComponent},
+  {path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: '**', redirectTo: '/home', pathMatch: 'full'}
 ];
 
 @NgModule({
@@ -29,7 +35,11 @@ const appRoutes: Routes = [
     RegisterComponent,
     HomeComponent,
     LoginComponent,
-    NavbarComponent
+    NavbarComponent,
+    MessageComponent,
+    MessagesComponent,
+    CustomersComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

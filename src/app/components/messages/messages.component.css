@@ -1,0 +1,33 @@
+
+.message-list {
+  overflow-y: scroll;
+  max-height: 80vh;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.info {
+  color: dimgray;
+  font-size: small;
+  display: inline-block;
+}
+
+p {
+  color: #cccccc;
+  margin: 5px 0;
+}
+
+.container {
+  margin: 10px 0;
+  padding: 10px 0;
+}
+
+.container:hover {
+  background-color: #444;
+}

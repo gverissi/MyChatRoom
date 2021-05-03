@@ -1,0 +1,45 @@
+
+textarea {
+  background-color: #333;
+  color: white;
+  border: 2px solid #4CAF50;
+  padding: 0;
+  text-decoration: none;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 16px;
+  margin: 0 20px 0 0;
+  width: 60vw;
+}
+
+textarea:focus {
+  outline: none;
+  border: 2px solid #4CAF50;
+  box-shadow: 0 0 10px #719ECE;
+}
+
+button {
+  background-color: #333;
+  color: white;
+  border: 2px solid #4CAF50;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  vertical-align: middle;
+  width: 100px;
+  height: 61px;
+  font-size: 16px;
+  margin: 0;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4CAF50;
+  color: black;
+}
+
+.hidden {
+  visibility: hidden;
+}
