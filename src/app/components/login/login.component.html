@@ -21,4 +21,12 @@
     </div>
 
   </form>
+  <div>
+    salut
+  </div>
+  <div *ngIf="authService.customer">
+    Re-salut
+    {{authService.customer.name}}
+    {{authService.customer.connected}}
+  </div>
 </div>

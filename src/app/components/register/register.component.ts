@@ -3,7 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
 import {Router} from '@angular/router';
 import {UserDaoService} from '../../services/user-dao/user-dao.service';
-import {User} from '../../entities/user/user';
+import {Customer} from '../../entities/user/customer';
 
 @Component({
   selector: 'app-register',
@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
     const email = this.userRegisterForm.value.email;
     const password = this.userRegisterForm.value.password;
     this.authService.register(name, email, password).then(
-      () => this.userDao.save(email, new User(name, true)).then(() => this.router.navigate(['/log-in'])),
+      () => this.userDao.save(email, new Customer(name, true)).then(() => this.router.navigate(['/log-in'])),
       (error) => console.log(error)
     );
   }

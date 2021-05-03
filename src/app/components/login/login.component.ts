@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
+import {Customer} from '../../entities/user/customer';
 
 @Component({
   selector: 'app-login',
@@ -10,12 +11,17 @@ import {AuthService} from '../../services/auth/auth.service';
 export class LoginComponent implements OnInit {
 
   userLoginForm: FormGroup;
+  customer: Customer;
 
-  constructor(private authService: AuthService) {
+  constructor(public authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.createForm();
+    // this.customer = JSON.parse(localStorage.getItem('customer'));
+    // this.customer = this.authService.customer;
+    // this.authService.customerEmitter.subscribe((customer) => this.customer = customer);
+    this.authService.customerEmitter.subscribe((customer) => this.customer = JSON.parse(localStorage.getItem('customer')));
   }
 
   private createForm(): void {
