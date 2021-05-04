@@ -2,6 +2,7 @@
 .navbar {
   overflow: hidden;
   background-color: dimgray;
+  height: 46px;
 }
 
 .navbar a {

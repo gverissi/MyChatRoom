@@ -1,6 +1,18 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+// Firebase
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
+// Split pane
+import { AngularSplitModule } from 'angular-split';
+
+// Environment
+import { environment } from '../environments/environment';
+
+// Components
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -8,13 +20,6 @@ import { HomeComponent } from './components/home/home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-
-// Firebase
-import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-
-import { environment } from '../environments/environment';
 import { MessageComponent } from './components/message/message.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { CustomersComponent } from './components/customers/customers.component';
@@ -50,7 +55,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AngularSplitModule
   ],
   providers: [],
   bootstrap: [AppComponent]

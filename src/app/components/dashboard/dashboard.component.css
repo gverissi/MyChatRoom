@@ -1,28 +1,10 @@
 
-.grid-container {
-  display: grid;
-  grid-template-columns: 20vw auto;
-  grid-template-rows: auto auto;
-  grid-gap: 10px;
+.container {
+  width: 100%;
+  height: calc(100vh - 46px);
 }
 
-app-customers {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 3;
+.padding {
+  padding-left: 20px;
 }
 
-app-messages {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 2;
-}
-
-app-message {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}

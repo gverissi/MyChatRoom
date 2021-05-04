@@ -1,10 +1,16 @@
 
-<div class="grid-container">
-
-  <app-customers></app-customers>
-
-  <app-messages></app-messages>
-
-  <app-message></app-message>
-
+<div class="container">
+  <as-split direction="horizontal" gutterSize="5">
+    <as-split-area size="10" minSize="10" maxSize="80">
+      <div class="padding">
+        <app-customers></app-customers>
+      </div>
+    </as-split-area>
+    <as-split-area size="90">
+      <div class="padding">
+        <app-messages></app-messages>
+        <app-message></app-message>
+      </div>
+    </as-split-area>
+  </as-split>
 </div>

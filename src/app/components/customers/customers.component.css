@@ -1,7 +1,7 @@
 
 .customer-list {
   overflow-y: scroll;
-  height: 80vh;
+  height: 100%;
 }
 
 .container {
