@@ -1,0 +1,14 @@
+
+.customer-list {
+  overflow-y: scroll;
+  height: 80vh;
+}
+
+.container {
+  margin: 10px 0;
+  padding: 10px 0;
+}
+
+.container:hover {
+  background-color: #444;
+}

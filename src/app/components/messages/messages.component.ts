@@ -12,7 +12,7 @@ export class MessagesComponent implements OnInit {
 
   @ViewChild('scroll') scroll: any;
 
-  messages: any = [];
+  messages: Message[] = [];
 
   constructor(private messageDao: MessageDaoService) { }
 

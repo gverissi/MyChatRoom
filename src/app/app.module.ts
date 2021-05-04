@@ -19,6 +19,7 @@ import { MessageComponent } from './components/message/message.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { CustomersComponent } from './components/customers/customers.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { CustomerComponent } from './components/customer/customer.component';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
     MessageComponent,
     MessagesComponent,
     CustomersComponent,
-    DashboardComponent
+    DashboardComponent,
+    CustomerComponent
   ],
   imports: [
     BrowserModule,

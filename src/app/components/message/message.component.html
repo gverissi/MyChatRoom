@@ -1,8 +1,8 @@
 
 <form [formGroup]="messageForm">
 
-  <textarea class="inline-block" formControlName="body" rows="3"></textarea>
+  <textarea formControlName="body" rows="3"></textarea>
 
-  <button class="inline-block" type="button" (click)="onClickSendMessage()" [disabled]="messageForm.invalid">Send</button>
+  <button type="button" (click)="onClickSendMessage()" [disabled]="messageForm.invalid">Send</button>
 
 </form>

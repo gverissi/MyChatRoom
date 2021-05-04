@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
+import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from '@angular/fire/firestore';
 import {Customer} from '../../entities/customer/customer';
 import {Observable} from 'rxjs';
 import firebase from 'firebase';
@@ -14,7 +14,7 @@ export class CustomerDaoService {
   table: AngularFirestoreCollection<Customer>;
 
   constructor(private db: AngularFirestore) {
-    this.table = db.collection<Customer>(this.tableName);
+    this.table = db.collection(this.tableName);
   }
 
   save(customer: Customer): Promise<void> {
@@ -24,6 +24,10 @@ export class CustomerDaoService {
 
   findByEmail(email: string): Observable<DocumentSnapshot<Customer>> {
     return this.table.doc(email).get();
+  }
+
+  findAll(): Observable<DocumentChangeAction<Customer>[]> {
+    return this.table.snapshotChanges();
   }
 
 }

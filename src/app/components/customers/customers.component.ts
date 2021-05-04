@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {map} from 'rxjs/operators';
+import {Customer} from '../../entities/customer/customer';
+import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 
 @Component({
   selector: 'app-customers',
@@ -7,9 +10,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CustomersComponent implements OnInit {
 
-  constructor() { }
+  customers: Customer[] = [];
+
+  constructor(private customerDao: CustomerDaoService) { }
 
   ngOnInit(): void {
+    this.customerDao.findAll().pipe(
+      map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
+      this.customers = data.sort();
+    });
   }
 
 }

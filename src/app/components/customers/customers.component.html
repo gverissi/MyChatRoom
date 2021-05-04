@@ -1,1 +1,8 @@
-<p>customers works!</p>
+
+<div class="customer-list">
+  <p *ngIf="customers.length == 0">No users</p>
+  <div class="container" *ngFor="let customer of customers">
+    <app-customer [customer]="customer">
+    </app-customer>
+  </div>
+</div>

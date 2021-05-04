@@ -21,7 +21,15 @@ export class MessageDaoService {
   }
 
   save(message: Message): Promise<DocumentReference<Message>> {
-    const data = { from: { name: message.from.name, connected: message.from.connected }, body: message.body , date: message.date };
+    const data = {
+      from: {
+        email: message.from.email,
+        name: message.from.name,
+        connected: message.from.connected
+      },
+      body: message.body,
+      date: message.date
+    };
     return this.table.add(data);
   }
 
