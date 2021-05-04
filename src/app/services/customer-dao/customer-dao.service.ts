@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
-import {Customer} from '../../entities/user/customer';
+import {Customer} from '../../entities/customer/customer';
 import {Observable} from 'rxjs';
 import firebase from 'firebase';
 import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
@@ -8,20 +8,18 @@ import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 @Injectable({
   providedIn: 'root'
 })
-export class UserDaoService {
+export class CustomerDaoService {
 
-  tableName = 'user';
+  tableName = 'customer';
   table: AngularFirestoreCollection<Customer>;
 
   constructor(private db: AngularFirestore) {
     this.table = db.collection<Customer>(this.tableName);
   }
 
-  save(email: string, user: Customer): Promise<void> {
-    const data = { name: user.name, connected: user.connected };
-    // const data = userConverter.toFirestore(user);
-    // this.table.doc(email).set(user).then(() => console.log('Add person into db')).catch(error => console.log(error.message));
-    return this.table.doc(email).set(data);
+  save(customer: Customer): Promise<void> {
+    const data = { email: customer.email,  name: customer.name, connected: customer.connected };
+    return this.table.doc(customer.email).set(data);
   }
 
   findByEmail(email: string): Observable<DocumentSnapshot<Customer>> {

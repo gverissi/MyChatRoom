@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth/auth.service';
-import {Customer} from '../../entities/user/customer';
 
 @Component({
   selector: 'app-login',
@@ -11,22 +10,11 @@ import {Customer} from '../../entities/user/customer';
 export class LoginComponent implements OnInit {
 
   userLoginForm: FormGroup;
-  customer: Customer;
-  compeur = 0;
 
-  constructor(public authService: AuthService) {
-    // this.compeur = 0;
-    console.log('login construcor');
-  }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    console.log('login ngOnInit()');
-    this.compeur++;
     this.createForm();
-    // this.customer = JSON.parse(localStorage.getItem('customer'));
-    // this.customer = this.authService.customer;
-    // this.authService.customerEmitter.subscribe((customer) => this.customer = customer);
-    this.authService.customerEmitter.subscribe((customer) => this.customer = JSON.parse(localStorage.getItem('customer')));
   }
 
   private createForm(): void {
@@ -52,7 +40,7 @@ export class LoginComponent implements OnInit {
     const password = this.userLoginForm.value.password;
     this.authService.logIn(email, password).then(
       value => console.log('value on login = ', value),
-      reason => console.log('reason = ', reason)
+      reason => console.log('reason on login = ', reason)
     );
   }
 

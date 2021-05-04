@@ -1,21 +1,19 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Observable} from 'rxjs';
 import firebase from 'firebase';
 import User = firebase.User;
-import {UserDaoService} from '../user-dao/user-dao.service';
-import {Customer} from '../../entities/user/customer';
+import {CustomerDaoService} from '../customer-dao/customer-dao.service';
+import {Customer} from '../../entities/customer/customer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  // isLoggedIn: boolean;
   customer: Customer;
-  customerEmitter: EventEmitter<Customer> = new EventEmitter();
 
-  constructor(private angularFireAuth: AngularFireAuth, private userDao: UserDaoService) {
+  constructor(private angularFireAuth: AngularFireAuth, private userDao: CustomerDaoService) {
   }
 
   getAuthState(): Observable<User> {
@@ -23,13 +21,12 @@ export class AuthService {
   }
 
   register(name: string, email: string, password: string): Promise<any> {
-    const customer = new Customer(name, true);
+    const customer = new Customer(email, name, true);
     return this.angularFireAuth.createUserWithEmailAndPassword(email, password).then(
-      () => this.userDao.save(email, customer).then(
+      () => this.userDao.save(customer).then(
         () => {
           this.customer = customer;
           localStorage.setItem('customer', JSON.stringify(this.customer));
-          this.customerEmitter.emit(this.customer);
         }
       )
     );
@@ -40,12 +37,14 @@ export class AuthService {
       () => this.userDao.findByEmail(email).subscribe(
         doc => {
           if (doc.exists) {
-            console.log('Document data:', doc.data());
-            this.customer = new Customer(doc.data().name, doc.data().connected);
-            localStorage.setItem('customer', JSON.stringify(this.customer));
-            this.customerEmitter.emit(this.customer);
+            const customer = new Customer(doc.data().email, doc.data().name, true);
+            this.userDao.save(customer).then(
+              () => {
+                this.customer = customer;
+                localStorage.setItem('customer', JSON.stringify(this.customer));
+              }
+            );
           } else {
-            // doc.data() will be undefined in this case
             console.log('No such document!');
           }
         }
@@ -56,9 +55,13 @@ export class AuthService {
   logOut(): Promise<any> {
     return this.angularFireAuth.signOut().then(
       () => {
-        this.customer = null;
-        localStorage.setItem('customer', null);
-        this.customerEmitter.emit(this.customer);
+        this.customer.connected = false;
+        this.userDao.save(this.customer).then(
+          () => {
+            this.customer = null;
+            localStorage.setItem('customer', null);
+          }
+        );
       }
     );
   }

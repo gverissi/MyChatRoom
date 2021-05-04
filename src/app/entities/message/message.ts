@@ -1,4 +1,4 @@
-import {Customer} from '../user/customer';
+import {Customer} from '../customer/customer';
 import firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
 

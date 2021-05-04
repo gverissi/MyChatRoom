@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth/auth.service';
-import {UserDaoService} from '../../services/user-dao/user-dao.service';
+import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +12,7 @@ export class NavbarComponent implements OnInit {
   isLoggedIn: boolean;
   userName: string;
 
-  constructor(private authService: AuthService, private userDao: UserDaoService) { }
+  constructor(private authService: AuthService, private userDao: CustomerDaoService) { }
 
   ngOnInit(): void {
     this.authService.getAuthState().subscribe(user => {
@@ -32,7 +32,6 @@ export class NavbarComponent implements OnInit {
         this.isLoggedIn = false;
         this.userName = 'not-logged';
       }
-      // this.isLoggedIn = !!user;
     });
   }
 

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UserDaoService } from './user-dao.service';
+import { CustomerDaoService } from './customer-dao.service';
 
 describe('UserDaoService', () => {
-  let service: UserDaoService;
+  let service: CustomerDaoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(UserDaoService);
+    service = TestBed.inject(CustomerDaoService);
   });
 
   it('should be created', () => {
