@@ -1,7 +1,7 @@
 
 .message-list {
   overflow-y: scroll;
-  max-height: 80vh;
+  max-height: calc(100vh - 143px);
 }
 
 a {

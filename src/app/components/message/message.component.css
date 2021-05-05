@@ -1,4 +1,8 @@
 
+form {
+  height: 97px;
+}
+
 textarea {
   background-color: #333;
   color: white;
@@ -10,7 +14,7 @@ textarea {
   font-size: 16px;
   height: 57px;
   margin: 0 20px 0 0;
-  width: 80%;
+  width: calc(100% - 200px);
 }
 
 textarea:focus {

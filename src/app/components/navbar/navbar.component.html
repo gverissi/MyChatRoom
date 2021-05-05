@@ -1,12 +1,12 @@
 
 <div class="navbar">
   <a routerLink="/home">Home</a>
+  <a routerLink="/dashboard" *ngIf="isLoggedIn">Dashboard</a>
   <div *ngIf="isLoggedIn" class="dropdown">
     <button class="drop-btn">{{userName}}</button>
     <div class="dropdown-content">
       <a routerLink="/account">Account</a>
-<!--      <a routerLink="/log-out" (click)="onClickLogOutUser()">Log Out</a>-->
-      <a (click)="onClickLogOutUser()">Log Out</a>
+      <a routerLink="/home" (click)="onClickLogOutUser()">Log Out</a>
     </div>
   </div>
 </div>

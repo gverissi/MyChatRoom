@@ -2,22 +2,22 @@
 <div class="container">
   <form [formGroup]="userLoginForm">
 
-    <div>
+    <div class="form-control">
       <label for="email">Email</label>
       <input type="email" id="email" formControlName="email">
       <span *ngIf="emailNotValid()">Email must be a least 6 characters long</span>
       <span class="hidden">hidden</span>
     </div>
 
-    <div>
+    <div class="form-control">
       <label for="password">Password</label>
       <input type="password" id="password" formControlName="password">
       <span *ngIf="passwordValidity()">Password must be a least 6 characters long</span>
       <span class="hidden">hidden</span>
     </div>
 
-    <div>
-      <button type="button" (click)="onClickLogInUser()" [disabled]="userLoginForm.invalid">Log-In</button>
+    <div class="form-control">
+      <button type="button" (click)="onClickLogInUser()" [disabled]="userLoginForm.invalid" [ngClass]="{'is-invalid': userLoginForm.invalid}">Log-In</button>
     </div>
 
   </form>

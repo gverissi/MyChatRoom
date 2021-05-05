@@ -18,14 +18,11 @@ export class NavbarComponent implements OnInit {
     this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.isLoggedIn = true;
-        console.log('email = ', user.email);
         this.userDao.findByEmail(user.email).subscribe(doc => {
           if (doc.exists) {
-            console.log('Document data:', doc.data());
             this.userName = doc.data().name;
           } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document!');
+            console.log('navbar: customer not found');
           }
         });
       } else {

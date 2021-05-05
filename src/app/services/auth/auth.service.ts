@@ -11,8 +11,6 @@ import {Customer} from '../../entities/customer/customer';
 })
 export class AuthService {
 
-  customer: Customer;
-
   constructor(private angularFireAuth: AngularFireAuth, private customerDao: CustomerDaoService) {
   }
 
@@ -25,8 +23,7 @@ export class AuthService {
     return this.angularFireAuth.createUserWithEmailAndPassword(email, password).then(
       () => this.customerDao.save(customer).then(
         () => {
-          this.customer = customer;
-          localStorage.setItem('customer', JSON.stringify(this.customer));
+          localStorage.setItem('customer', JSON.stringify(customer));
         }
       )
     );
@@ -40,8 +37,7 @@ export class AuthService {
             const customer = new Customer(doc.data().email, doc.data().name, true);
             this.customerDao.save(customer).then(
               () => {
-                this.customer = customer;
-                localStorage.setItem('customer', JSON.stringify(this.customer));
+                localStorage.setItem('customer', JSON.stringify(customer));
               }
             );
           } else {
@@ -55,10 +51,10 @@ export class AuthService {
   logOut(): Promise<any> {
     return this.angularFireAuth.signOut().then(
       () => {
-        this.customer.connected = false;
-        this.customerDao.save(this.customer).then(
+        const customer = JSON.parse(localStorage.getItem('customer'));
+        customer.connected = false;
+        this.customerDao.save(customer).then(
           () => {
-            this.customer = null;
             localStorage.setItem('customer', null);
           }
         );

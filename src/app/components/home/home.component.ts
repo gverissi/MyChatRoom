@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +9,14 @@ import {Router} from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private router: Router) {
+  isLoggedIn: boolean;
+
+  constructor(private router: Router, private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    const customer = JSON.parse(localStorage.getItem('customer'));
+    this.isLoggedIn = !!customer;
   }
 
   onClickShowRegistrationForm(): void {
@@ -20,6 +25,16 @@ export class HomeComponent implements OnInit {
 
   onClickShowLogInForm(): void {
     this.router.navigate(['/log-in']);
+  }
+
+  onClickShowDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
+  onClickLogOut(): void {
+    this.authService.logOut().then(
+      () => this.isLoggedIn = false
+    );
   }
 
 }
