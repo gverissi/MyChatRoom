@@ -21,13 +21,17 @@ export class MessagesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.messageDao.findAll().pipe(
       map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
-      this.messages = data.sort((a: Message, b: Message) => a.date.toDate().getTime() - b.date.toDate().getTime());
+      this.messages = data.sort((a: Message, b: Message) => a.date - b.date);
       this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
     });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  getDate(ts: number): Date {
+    return new Date(ts);
   }
 
 }
