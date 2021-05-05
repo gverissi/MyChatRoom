@@ -21,55 +21,30 @@ export class AuthService {
   register(name: string, email: string, password: string): Promise<any> {
     const customer = new Customer(email, name, true);
     return this.angularFireAuth.createUserWithEmailAndPassword(email, password).then(
-      () => this.customerDao.save(customer).then(
-        () => {
-          localStorage.setItem('customer', JSON.stringify(customer));
-        }
+      (userCred) => userCred.user.updateProfile({ displayName: name }).then(
+        () => this.customerDao.save(customer).then(
+          () => localStorage.setItem('customer', JSON.stringify(customer))
+        )
       )
     );
   }
 
   logIn(email: string, password: string): Promise<any> {
     return this.angularFireAuth.signInWithEmailAndPassword(email, password).then(
-      () => this.customerDao.findByEmail(email).subscribe(
-        doc => {
-          if (doc.exists) {
-            const customer = new Customer(doc.data().email, doc.data().name, true);
-            this.customerDao.save(customer).then(
-              () => {
-                localStorage.setItem('customer', JSON.stringify(customer));
-              }
-            );
-          } else {
-            console.log('No such document!');
-          }
-        }
-      )
+      (userCred) => {
+        const customer = new Customer(email, userCred.user.displayName, true);
+        localStorage.setItem('customer', JSON.stringify(customer));
+        this.customerDao.save(customer);
+      }
     );
   }
-
-  // logOut(): Promise<any> {
-  //   return this.angularFireAuth.signOut().then(
-  //     () => {
-  //       const customer = JSON.parse(localStorage.getItem('customer'));
-  //       customer.connected = false;
-  //       this.customerDao.save(customer).then(
-  //         () => {
-  //           localStorage.setItem('customer', null);
-  //         }
-  //       );
-  //     }
-  //   );
-  // }
 
   logOut(): Promise<any> {
     const customer = JSON.parse(localStorage.getItem('customer'));
     customer.connected = false;
     localStorage.setItem('customer', null);
     return this.customerDao.save(customer).then(
-      () => {
-        this.angularFireAuth.signOut();
-      }
+      () => this.angularFireAuth.signOut()
     );
   }
 

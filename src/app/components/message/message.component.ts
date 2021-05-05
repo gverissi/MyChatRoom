@@ -18,20 +18,15 @@ export class MessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.messageForm = new FormGroup(
-      {
-        body: new FormControl('', Validators.required)
-      });
+    this.messageForm = new FormGroup( { body: new FormControl('', Validators.required) });
   }
 
   onClickSendMessage(): void {
     const customer = JSON.parse(localStorage.getItem('customer'));
     const body = this.messageForm.value.body;
     const message = new Message(customer, body, Timestamp.now());
-    this.messageForm.reset();
     this.messageDao.save(message).then(
-      value => console.log('value on message = ', value),
-      reason => console.log('reason on message = ', reason)
+      () => this.messageForm.reset()
     );
   }
 

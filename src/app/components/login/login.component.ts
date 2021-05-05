@@ -40,8 +40,7 @@ export class LoginComponent implements OnInit {
     const email = this.userLoginForm.value.email;
     const password = this.userLoginForm.value.password;
     this.authService.logIn(email, password).then(
-      () => this.router.navigate(['/dashboard']),
-      (error) => console.log('Error when login: ', error)
+      () => this.router.navigate(['/dashboard'])
     );
   }
 

@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth/auth.service';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 import {Subscription} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -14,19 +15,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   userName: string;
   subscription: Subscription;
 
-  constructor(private authService: AuthService, private userDao: CustomerDaoService) { }
+  constructor(private authService: AuthService, private userDao: CustomerDaoService, private router: Router) { }
 
   ngOnInit(): void {
     this.subscription = this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.isLoggedIn = true;
-        this.userDao.findByEmail(user.email).subscribe(doc => {
-          if (doc.exists) {
-            this.userName = doc.data().name;
-          } else {
-            console.log('navbar: customer not found');
-          }
-        });
+        this.userName = user.displayName;
       } else {
         this.isLoggedIn = false;
         this.userName = 'not-logged';
@@ -40,8 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onClickLogOutUser(): void {
     this.authService.logOut().then(
-      value => console.log('value = ', value),
-      reason => console.log('reason = ', reason)
+      () => this.router.navigate(['/home'])
     );
   }
 

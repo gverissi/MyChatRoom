@@ -2,7 +2,7 @@
 <div class="message-list" #scroll>
   <p *ngIf="messages.length == 0">No messages</p>
   <div class="container" *ngFor="let message of messages">
-    <a href="#">{{message.from.name}}</a><p class="info">{{message.date.toDate() | date:'MM/dd/YYYY'}} at {{message.date.toDate() | date:'HH:mm'}}</p>
+    <a href="#">{{message.from.name}}</a><p class="info">{{message.date.toDate() | date:'dd/MM/YYYY'}} at {{message.date.toDate() | date:'HH:mm'}}</p>
     <p class="">{{message.body}}</p>
   </div>
 </div>
