@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth/auth.service';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 
   isLoggedIn: boolean;
   userName: string;
+  subscription: Subscription;
 
   constructor(private authService: AuthService, private userDao: CustomerDaoService) { }
 
   ngOnInit(): void {
-    this.authService.getAuthState().subscribe(user => {
+    this.subscription = this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.isLoggedIn = true;
         this.userDao.findByEmail(user.email).subscribe(doc => {
@@ -30,6 +32,10 @@ export class NavbarComponent implements OnInit {
         this.userName = 'not-logged';
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onClickLogOutUser(): void {

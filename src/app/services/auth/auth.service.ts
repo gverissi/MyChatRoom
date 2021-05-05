@@ -48,16 +48,27 @@ export class AuthService {
     );
   }
 
+  // logOut(): Promise<any> {
+  //   return this.angularFireAuth.signOut().then(
+  //     () => {
+  //       const customer = JSON.parse(localStorage.getItem('customer'));
+  //       customer.connected = false;
+  //       this.customerDao.save(customer).then(
+  //         () => {
+  //           localStorage.setItem('customer', null);
+  //         }
+  //       );
+  //     }
+  //   );
+  // }
+
   logOut(): Promise<any> {
-    return this.angularFireAuth.signOut().then(
+    const customer = JSON.parse(localStorage.getItem('customer'));
+    customer.connected = false;
+    localStorage.setItem('customer', null);
+    return this.customerDao.save(customer).then(
       () => {
-        const customer = JSON.parse(localStorage.getItem('customer'));
-        customer.connected = false;
-        this.customerDao.save(customer).then(
-          () => {
-            localStorage.setItem('customer', null);
-          }
-        );
+        this.angularFireAuth.signOut();
       }
     );
   }
