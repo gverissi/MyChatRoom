@@ -25,12 +25,13 @@ import { MessagesComponent } from './components/messages/messages.component';
 import { CustomersComponent } from './components/customers/customers.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CustomerComponent } from './components/customer/customer.component';
+import {IsSignedInGuardService} from './services/guard/is-signed-in-guard.service';
 
 const appRoutes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'log-in', component: LoginComponent},
-  {path: 'dashboard', component: DashboardComponent},
+  {path: 'dashboard', component: DashboardComponent, canActivate: [IsSignedInGuardService]},
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', redirectTo: '/home', pathMatch: 'full'}
 ];
