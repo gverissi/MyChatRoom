@@ -3,6 +3,6 @@
   <p *ngIf="messages.length == 0">No messages</p>
   <div class="container" *ngFor="let message of messages">
     <a href="#">{{message.from.name}}</a><p class="info">{{getDate(message.date) | date:'dd/MM/YYYY'}} at {{getDate(message.date) | date:'HH:mm'}}</p>
-    <p class="">{{message.body}}</p>
+    <p>{{message.body}}</p>
   </div>
 </div>

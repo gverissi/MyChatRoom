@@ -25,7 +25,8 @@ export class MessageDaoService {
       from: {
         email: message.from.email,
         name: message.from.name,
-        connected: message.from.connected
+        connected: message.from.connected,
+        isTyping: message.from.isTyping
       },
       body: message.body,
       date: message.date

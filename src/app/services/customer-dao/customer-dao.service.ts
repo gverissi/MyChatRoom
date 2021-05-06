@@ -18,7 +18,7 @@ export class CustomerDaoService {
   }
 
   save(customer: Customer): Promise<void> {
-    const data = { email: customer.email,  name: customer.name, connected: customer.connected };
+    const data = { email: customer.email,  name: customer.name, connected: customer.connected, isTyping: customer.isTyping };
     return this.table.doc(customer.email).set(data);
   }
 
@@ -28,6 +28,10 @@ export class CustomerDaoService {
 
   findAll(): Observable<DocumentChangeAction<Customer>[]> {
     return this.table.snapshotChanges();
+  }
+
+  findAllWhereIsTyping(): Observable<DocumentChangeAction<Customer>[]> {
+    return this.db.collection<Customer>(this.tableName, ref => ref.where('isTyping', '==', true)).snapshotChanges();
   }
 
 }

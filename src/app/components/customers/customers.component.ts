@@ -17,9 +17,10 @@ export class CustomersComponent implements OnInit, OnDestroy {
   constructor(private customerDao: CustomerDaoService) { }
 
   ngOnInit(): void {
+    const customer = JSON.parse(localStorage.getItem('customer'));
     this.subscription = this.customerDao.findAll().pipe(
       map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
-      this.customers = data.sort();
+      this.customers = data.filter(c => c.name !== customer.name).sort();
     });
   }
 

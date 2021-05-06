@@ -1,8 +1,12 @@
 
+<div>
+  <p *ngFor="let typingCustomer of typingCustomers" class="info">{{typingCustomer.name}},</p>
+  <p *ngIf="typingCustomers.length == 1" class="info">is typing ...</p>
+  <p *ngIf="typingCustomers.length > 1" class="info">are typing ...</p>
+  <p class="info hidden">hidden</p>
+</div>
+
 <form [formGroup]="messageForm">
-
-  <textarea formControlName="body" rows="3"></textarea>
-
+  <textarea formControlName="body" rows="3" (keydown)="onKeyDown()" (keyup)="onKeyUp()"></textarea>
   <button type="button" (click)="onClickSendMessage()" [disabled]="messageForm.invalid">Send</button>
-
 </form>

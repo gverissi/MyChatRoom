@@ -49,3 +49,10 @@ button:hover {
 .hidden {
   visibility: hidden;
 }
+
+.info {
+  color: dimgray;
+  font-size: small;
+  display: inline-block;
+  margin-right: 5px;
+}
