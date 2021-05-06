@@ -3,6 +3,7 @@ import {map} from 'rxjs/operators';
 import {Customer} from '../../entities/customer/customer';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 import {Subscription} from 'rxjs';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-customers',
@@ -13,19 +14,24 @@ export class CustomersComponent implements OnInit, OnDestroy {
 
   customers: Customer[] = [];
   subscription: Subscription;
+  subscriptionAuth: Subscription;
 
-  constructor(private customerDao: CustomerDaoService) { }
+  constructor(private customerDao: CustomerDaoService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    const customer = JSON.parse(localStorage.getItem('customer'));
-    this.subscription = this.customerDao.findAll().pipe(
-      map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
-      this.customers = data.filter(c => c.name !== customer.name).sort();
+    this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
+      if (user) {
+        this.subscription = this.customerDao.findAll().pipe(
+          map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
+          this.customers = data.filter(c => c.name !== user.displayName).sort();
+        });
+      }
     });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.subscriptionAuth.unsubscribe();
   }
 
 }

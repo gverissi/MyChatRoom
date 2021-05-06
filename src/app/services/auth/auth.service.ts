@@ -33,8 +33,9 @@ export class AuthService {
     return this.angularFireAuth.signInWithEmailAndPassword(email, password).then(
       (userCred) => {
         const customer = new Customer(email, userCred.user.displayName, true);
-        localStorage.setItem('customer', JSON.stringify(customer));
-        this.customerDao.save(customer);
+        this.customerDao.save(customer).then(
+          () => localStorage.setItem('customer', JSON.stringify(customer))
+        );
       }
     );
   }

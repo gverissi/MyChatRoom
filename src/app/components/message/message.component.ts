@@ -6,6 +6,7 @@ import {Customer} from '../../entities/customer/customer';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-message',
@@ -18,31 +19,36 @@ export class MessageComponent implements OnInit, OnDestroy {
   timeoutDown: number;
   timeoutUp: number;
   isTyping = false;
-  customer: Customer;
   typingCustomers: Customer[] = [];
   subscription: Subscription;
+  subscriptionAuth: Subscription;
 
-  constructor(private messageDao: MessageDaoService, private customerDao: CustomerDaoService) {
+  constructor(private messageDao: MessageDaoService, private customerDao: CustomerDaoService, private authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.messageForm = new FormGroup({body: new FormControl('', Validators.required)});
-    this.customer = JSON.parse(localStorage.getItem('customer'));
-    this.subscription = this.customerDao.findAllWhereIsTyping().pipe(
-      map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
-      this.typingCustomers = data.filter(customer => customer.name !== this.customer.name);
+    this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
+      if (user) {
+        this.subscription = this.customerDao.findAllWhereIsTyping().pipe(
+          map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
+          this.typingCustomers = data.filter(customer => customer.name !== user.displayName);
+        });
+      }
     });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.subscriptionAuth.unsubscribe();
   }
 
   onClickSendMessage(): void {
     this.isTyping = false;
     this.saveCustomer();
+    const customer = JSON.parse(localStorage.getItem('customer'));
     const body = this.messageForm.value.body;
-    const message = new Message(this.customer, body, (new Date()).getTime());
+    const message = new Message(customer, body, (new Date()).getTime());
     this.messageDao.save(message).then(
       () => this.messageForm.reset()
     );
@@ -64,8 +70,9 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   private saveCustomer(): void {
-    this.customer.isTyping = this.isTyping;
-    this.customerDao.save(this.customer);
+    const customer = JSON.parse(localStorage.getItem('customer'));
+    customer.isTyping = this.isTyping;
+    this.customerDao.save(customer).then();
   }
 
 }
