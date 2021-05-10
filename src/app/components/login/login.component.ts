@@ -21,14 +21,14 @@ export class LoginComponent implements OnInit {
   private createForm(): void {
     this.userLoginForm = new FormGroup(
       {
-        email: new FormControl('', [Validators.required, Validators.minLength(6)]),
+        name: new FormControl('', [Validators.required, Validators.minLength(3)]),
         password: new FormControl('', [Validators.required, Validators.minLength(6)])
       });
   }
 
-  emailNotValid(): boolean {
-    return (this.userLoginForm.controls.email.invalid &&
-      (this.userLoginForm.controls.email.dirty || this.userLoginForm.controls.email.touched));
+  nameNotValid(): boolean {
+    return (this.userLoginForm.controls.name.invalid &&
+      (this.userLoginForm.controls.name.dirty || this.userLoginForm.controls.name.touched));
   }
 
   passwordValidity(): boolean {
@@ -37,9 +37,9 @@ export class LoginComponent implements OnInit {
   }
 
   onClickLogInUser(): void {
-    const email = this.userLoginForm.value.email;
+    const name = this.userLoginForm.value.name;
     const password = this.userLoginForm.value.password;
-    this.authService.logIn(email, password).then(
+    this.authService.logIn(name, password).then(
       () => this.router.navigate(['/dashboard'])
     );
   }

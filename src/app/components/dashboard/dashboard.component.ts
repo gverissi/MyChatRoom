@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
+  messageToInDashboard = '-';
+  messageToInDashboardEventEmitter = new EventEmitter<string>();
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  notifyMessageToChanged($event: string): void {
+    this.messageToInDashboard = $event;
+    this.messageToInDashboardEventEmitter.emit(this.messageToInDashboard);
+  }
 }

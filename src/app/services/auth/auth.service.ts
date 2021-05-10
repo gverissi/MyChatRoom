@@ -11,6 +11,8 @@ import {Customer} from '../../entities/customer/customer';
 })
 export class AuthService {
 
+  mailSuffix = '123@gmail.fr';
+
   constructor(private angularFireAuth: AngularFireAuth, private customerDao: CustomerDaoService) {
   }
 
@@ -18,8 +20,9 @@ export class AuthService {
     return this.angularFireAuth.authState;
   }
 
-  register(name: string, email: string, password: string): Promise<any> {
-    const customer = new Customer(email, name, true);
+  register(name: string, password: string): Promise<any> {
+    const customer = new Customer(name, true);
+    const email = name + this.mailSuffix;
     return this.angularFireAuth.createUserWithEmailAndPassword(email, password).then(
       (userCred) => userCred.user.updateProfile({ displayName: name }).then(
         () => this.customerDao.save(customer).then(
@@ -29,10 +32,11 @@ export class AuthService {
     );
   }
 
-  logIn(email: string, password: string): Promise<any> {
+  logIn(name: string, password: string): Promise<any> {
+    const email = name + this.mailSuffix;
     return this.angularFireAuth.signInWithEmailAndPassword(email, password).then(
       (userCred) => {
-        const customer = new Customer(email, userCred.user.displayName, true);
+        const customer = new Customer(userCred.user.displayName, true);
         this.customerDao.save(customer).then(
           () => localStorage.setItem('customer', JSON.stringify(customer))
         );

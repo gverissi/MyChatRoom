@@ -22,20 +22,20 @@ export class MessageDaoService {
 
   save(message: Message): Promise<DocumentReference<Message>> {
     const data = {
-      from: {
-        email: message.from.email,
-        name: message.from.name,
-        connected: message.from.connected,
-        isTyping: message.from.isTyping
-      },
+      from: message.from,
       body: message.body,
-      date: message.date
+      date: message.date,
+      to: message.to
     };
     return this.table.add(data);
   }
 
   findAll(): Observable<DocumentChangeAction<Message>[]> {
     return this.table.snapshotChanges();
+  }
+
+  findAllWhereTo(to: string): Observable<DocumentChangeAction<Message>[]> {
+    return this.db.collection<Message>(this.tableName, ref => ref.where('to', '==', to)).snapshotChanges();
   }
 
 }

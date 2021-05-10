@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Message} from '../../entities/message/message';
 import {MessageDaoService} from '../../services/message-dao/message-dao.service';
 import {map} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
@@ -17,13 +17,26 @@ export class MessagesComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   subscription: Subscription;
   subscriptionAuth: Subscription;
+  subscriptionMessageTo: Subscription;
+
+  @Input()  messageToObservableInMessages: Observable<string>;
+  messageTo = '-';
 
   constructor(private messageDao: MessageDaoService, private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.subscribe();
+    this.subscriptionMessageTo = this.messageToObservableInMessages.subscribe((to) => {
+      this.messageTo = to;
+      this.unsubscribe();
+      this.subscribe();
+    });
+  }
+
+  subscribe(): void {
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
-        this.subscription = this.messageDao.findAll().pipe(
+        this.subscription = this.messageDao.findAllWhereTo(this.messageTo).pipe(
           map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
           this.messages = data.sort((a: Message, b: Message) => a.date - b.date);
           this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
@@ -33,6 +46,11 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.unsubscribe();
+    this.subscriptionMessageTo.unsubscribe();
+  }
+
+  unsubscribe(): void {
     this.subscription.unsubscribe();
     this.subscriptionAuth.unsubscribe();
   }

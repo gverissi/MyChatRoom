@@ -11,6 +11,7 @@ export class IsSignedInGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const user = this.angularFireAuth.currentUser;
+    console.log('das guard, user = ', user);
     const isSignedIn = !!user;
     if (isSignedIn !== true) {
       this.router.navigate(['/home']).then();

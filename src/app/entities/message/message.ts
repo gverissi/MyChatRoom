@@ -1,15 +1,16 @@
-import {Customer} from '../customer/customer';
 
 export class Message {
 
-  from: Customer;
+  from: string;
   body: string;
   date: number;
+  to: string;
 
-  constructor(from: Customer, body: string, date: number) {
-    this.from = from;
+  constructor(fromCustomerName: string, body: string, date: number, toCustomerName: string) {
+    this.from = fromCustomerName;
     this.body = body;
     this.date = date;
+    this.to = toCustomerName;
   }
 
 }

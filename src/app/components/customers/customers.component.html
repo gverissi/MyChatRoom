@@ -1,8 +1,9 @@
 
+<div (click)="changeCustomerNameForMassageTo('-')">Chat Room</div>
 <div class="customer-list">
   <p *ngIf="customers.length == 0">No users</p>
   <div class="container" *ngFor="let customer of customers">
-    <app-customer [customer]="customer">
+    <app-customer [customer]="customer" (click)="changeCustomerNameForMassageTo(customer.name)">
     </app-customer>
   </div>
 </div>

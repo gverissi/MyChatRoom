@@ -18,8 +18,8 @@ export class CustomerDaoService {
   }
 
   save(customer: Customer): Promise<void> {
-    const data = { email: customer.email,  name: customer.name, connected: customer.connected, isTyping: customer.isTyping };
-    return this.table.doc(customer.email).set(data);
+    const data = { name: customer.name, connected: customer.connected, isTyping: customer.isTyping };
+    return this.table.doc(customer.name).set(data);
   }
 
   findByEmail(email: string): Observable<DocumentSnapshot<Customer>> {

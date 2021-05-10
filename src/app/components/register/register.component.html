@@ -10,13 +10,6 @@
     </div>
 
     <div class="form-control">
-      <label for="email">Email</label>
-      <input type="email" id="email" formControlName="email">
-      <span *ngIf="emailNotValid()">Email must be a least 6 characters long</span>
-      <span class="hidden">hidden</span>
-    </div>
-
-    <div class="form-control">
       <label for="password">Password</label>
       <input type="password" id="password" formControlName="password">
       <span *ngIf="passwordNotValid()">Password must be a least 6 characters long</span>

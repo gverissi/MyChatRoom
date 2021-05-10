@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessageDaoService} from '../../services/message-dao/message-dao.service';
 import {Message} from '../../entities/message/message';
 import {Customer} from '../../entities/customer/customer';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AuthService} from '../../services/auth/auth.service';
 
@@ -22,6 +22,10 @@ export class MessageComponent implements OnInit, OnDestroy {
   typingCustomers: Customer[] = [];
   subscription: Subscription;
   subscriptionAuth: Subscription;
+  subscriptionMessageTo: Subscription;
+
+  @Input()  messageToObservableInMessage: Observable<string>;
+  messageTo = '-';
 
   constructor(private messageDao: MessageDaoService, private customerDao: CustomerDaoService, private authService: AuthService) {
   }
@@ -34,11 +38,15 @@ export class MessageComponent implements OnInit, OnDestroy {
           map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
           this.typingCustomers = data.filter(customer => customer.name !== user.displayName);
         });
+        this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => {
+          this.messageTo = to;
+        });
       }
     });
   }
 
   ngOnDestroy(): void {
+    this.subscriptionMessageTo.unsubscribe();
     this.subscription.unsubscribe();
     this.subscriptionAuth.unsubscribe();
   }
@@ -48,7 +56,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.saveCustomer();
     const customer = JSON.parse(localStorage.getItem('customer'));
     const body = this.messageForm.value.body;
-    const message = new Message(customer, body, (new Date()).getTime());
+    const message = new Message(customer.name, body, (new Date()).getTime(), this.messageTo);
     this.messageDao.save(message).then(
       () => this.messageForm.reset()
     );

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {Customer} from '../../entities/customer/customer';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
@@ -16,7 +16,11 @@ export class CustomersComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   subscriptionAuth: Subscription;
 
-  constructor(private customerDao: CustomerDaoService, private authService: AuthService) { }
+  @Input()  massageToInCustomers: string;
+  @Output() massageToInCustomersChange = new EventEmitter<string>();
+
+  constructor(private customerDao: CustomerDaoService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
@@ -32,6 +36,11 @@ export class CustomersComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscriptionAuth.unsubscribe();
+  }
+
+  changeCustomerNameForMassageTo(customerName: string): void {
+    this.massageToInCustomers = customerName;
+    this.massageToInCustomersChange.emit(this.massageToInCustomers);
   }
 
 }

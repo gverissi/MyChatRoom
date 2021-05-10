@@ -23,7 +23,6 @@ export class RegisterComponent implements OnInit {
     this.userRegisterForm = new FormGroup(
       {
         name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-        email: new FormControl('', [Validators.required, Validators.minLength(6)]),
         password: new FormControl('', [Validators.required, Validators.minLength(6)])
       });
   }
@@ -33,11 +32,6 @@ export class RegisterComponent implements OnInit {
       (this.userRegisterForm.controls.name.dirty || this.userRegisterForm.controls.name.touched);
   }
 
-  emailNotValid(): boolean {
-    return this.userRegisterForm.controls.email.invalid &&
-      (this.userRegisterForm.controls.email.dirty || this.userRegisterForm.controls.email.touched);
-  }
-
   passwordNotValid(): boolean {
     return this.userRegisterForm.controls.password.invalid &&
       (this.userRegisterForm.controls.password.dirty || this.userRegisterForm.controls.password.touched);
@@ -45,9 +39,8 @@ export class RegisterComponent implements OnInit {
 
   registerNewUser(): void {
     const name = this.userRegisterForm.value.name;
-    const email = this.userRegisterForm.value.email;
     const password = this.userRegisterForm.value.password;
-    this.authService.register(name, email, password).then(
+    this.authService.register(name, password).then(
       () => this.router.navigate(['/dashboard']),
       (error) => console.log(error)
     );
