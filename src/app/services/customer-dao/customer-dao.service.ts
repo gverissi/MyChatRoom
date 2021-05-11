@@ -16,7 +16,7 @@ export class CustomerDaoService {
   }
 
   save(customer: Customer): Promise<void> {
-    const data = { name: customer.name, connected: customer.connected, isTyping: customer.isTyping };
+    const data = { ...customer };
     return this.table.doc(customer.name).set(data);
   }
 

@@ -57,8 +57,12 @@ export class MessageComponent implements OnInit, OnDestroy {
     const customer = JSON.parse(localStorage.getItem('customer'));
     const body = this.messageForm.value.body;
     const message = new Message(customer.name, body, (new Date()).getTime(), this.messageTo);
-    this.messageDao.save(message).then(
-      () => this.messageForm.reset()
+    this.messageDao.save(message).then( () => {
+        this.messageForm.reset();
+        customer.newMessages.push(message.to);
+        console.log('dans message, cust = ', customer);
+        this.customerDao.save(customer).then();
+      }
     );
   }
 
