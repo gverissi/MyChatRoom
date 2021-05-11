@@ -1,7 +1,7 @@
 
 <div class="navbar">
-  <a routerLink="/home">Home</a>
-  <a routerLink="/dashboard" *ngIf="isLoggedIn">Dashboard</a>
+  <a [routerLinkActive]="['active']" routerLink="/home">Home</a>
+  <a [routerLinkActive]="['active']" routerLink="/dashboard" *ngIf="isLoggedIn">Dashboard</a>
   <div *ngIf="isLoggedIn" class="dropdown">
     <button class="drop-btn">{{userName}}</button>
     <div class="dropdown-content">
