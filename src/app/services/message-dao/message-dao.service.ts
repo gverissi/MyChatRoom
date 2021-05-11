@@ -6,7 +6,8 @@ import {
   DocumentReference,
 } from '@angular/fire/firestore';
 import {Message} from '../../entities/message/message';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -30,12 +31,18 @@ export class MessageDaoService {
     return this.table.add(data);
   }
 
-  findAll(): Observable<DocumentChangeAction<Message>[]> {
-    return this.table.snapshotChanges();
-  }
-
-  findAllWhereTo(to: string): Observable<DocumentChangeAction<Message>[]> {
-    return this.db.collection<Message>(this.tableName, ref => ref.where('to', '==', to)).snapshotChanges();
+  findAllWhereFromTo(from: string, to: string): Observable<DocumentChangeAction<Message>[]> {
+    if (to === '-') {
+      return this.db.collection<Message>(this.tableName, ref => ref.where('to', '==', to)).snapshotChanges();
+    } else {
+      const $queryOne = this.db.collection<Message>(this.tableName, ref =>
+        ref.where('from', '==', from).where('to', '==', to)).snapshotChanges();
+      const $queryTwo = this.db.collection<Message>(this.tableName, ref =>
+        ref.where('from', '==', to).where('to', '==', from)).snapshotChanges();
+      return combineLatest([$queryOne, $queryTwo]).pipe(
+        map(([one, two]) => [...one, ...two])
+      );
+    }
   }
 
 }

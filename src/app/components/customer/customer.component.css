@@ -13,8 +13,8 @@
   background-color: darkgreen;
 }
 
-a {
-  text-decoration: none;
+p {
+  margin: 0;
   color: white;
   font-weight: bold;
   display: inline-block;

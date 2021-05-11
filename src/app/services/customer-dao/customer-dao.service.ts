@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from '@angular/fire/firestore';
 import {Customer} from '../../entities/customer/customer';
 import {Observable} from 'rxjs';
-import firebase from 'firebase';
-import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +18,6 @@ export class CustomerDaoService {
   save(customer: Customer): Promise<void> {
     const data = { name: customer.name, connected: customer.connected, isTyping: customer.isTyping };
     return this.table.doc(customer.name).set(data);
-  }
-
-  findByEmail(email: string): Observable<DocumentSnapshot<Customer>> {
-    return this.table.doc(email).get();
   }
 
   findAll(): Observable<DocumentChangeAction<Customer>[]> {

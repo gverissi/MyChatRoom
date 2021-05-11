@@ -12,3 +12,23 @@
 .container:hover {
   background-color: #444;
 }
+
+app-customer {
+  cursor: pointer;
+}
+
+.cr {
+  margin: 0;
+  color: white;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.is-selected {
+  background-color: #4CAF50;
+}

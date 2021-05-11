@@ -1,8 +1,10 @@
 
-<div (click)="changeCustomerNameForMassageTo('-')">Chat Room</div>
 <div class="customer-list">
+  <div class="container cursor" (click)="changeCustomerNameForMassageTo('-')" [ngClass]="{'is-selected': messageToInCustomers == '-'}">
+    <p class="cr">Chat Room</p>
+  </div>
   <p *ngIf="customers.length == 0">No users</p>
-  <div class="container" *ngFor="let customer of customers">
+  <div class="container" *ngFor="let customer of customers" [ngClass]="{'is-selected': messageToInCustomers == customer.name}">
     <app-customer [customer]="customer" (click)="changeCustomerNameForMassageTo(customer.name)">
     </app-customer>
   </div>

@@ -36,7 +36,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   subscribe(): void {
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
-        this.subscription = this.messageDao.findAllWhereTo(this.messageTo).pipe(
+        this.subscription = this.messageDao.findAllWhereFromTo(user.displayName, this.messageTo).pipe(
           map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
           this.messages = data.sort((a: Message, b: Message) => a.date - b.date);
           this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;

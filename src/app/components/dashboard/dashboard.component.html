@@ -3,7 +3,8 @@
   <as-split direction="horizontal" gutterSize="5">
     <as-split-area size="10" minSize="10" maxSize="80">
       <div>
-        <app-customers [massageToInCustomers]="messageToInDashboard" (massageToInCustomersChange)="notifyMessageToChanged($event)"></app-customers>
+        <app-customers [messageToInCustomers]="messageToInDashboard"
+                       (messageToInCustomersChange)="notifyMessageToChanged($event)"></app-customers>
       </div>
     </as-split-area>
     <as-split-area size="90">

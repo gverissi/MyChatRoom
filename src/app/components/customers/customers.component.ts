@@ -16,8 +16,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   subscriptionAuth: Subscription;
 
-  @Input()  massageToInCustomers: string;
-  @Output() massageToInCustomersChange = new EventEmitter<string>();
+  @Input()  messageToInCustomers: string;
+  @Output() messageToInCustomersChange = new EventEmitter<string>();
 
   constructor(private customerDao: CustomerDaoService, private authService: AuthService) {
   }
@@ -39,8 +39,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
   }
 
   changeCustomerNameForMassageTo(customerName: string): void {
-    this.massageToInCustomers = customerName;
-    this.massageToInCustomersChange.emit(this.massageToInCustomers);
+    this.messageToInCustomers = customerName;
+    this.messageToInCustomersChange.emit(this.messageToInCustomers);
   }
 
 }
