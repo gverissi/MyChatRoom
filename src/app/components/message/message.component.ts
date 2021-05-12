@@ -24,31 +24,46 @@ export class MessageComponent implements OnInit, OnDestroy {
   subscriptionAuth: Subscription;
   subscriptionMessageTo: Subscription;
 
-  @Input()  messageToObservableInMessage: Observable<string>;
+  @Input() messageToObservableInMessage: Observable<string>;
+  // @Input() customer: Customer;
+  customer: Customer = null;
+
   messageTo = '-';
 
   constructor(private messageDao: MessageDaoService, private customerDao: CustomerDaoService, private authService: AuthService) {
   }
 
+  // ngOnInit(): void {
+  //   this.messageForm = new FormGroup({body: new FormControl('', Validators.required)});
+  //   this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
+  //     if (user) {
+  //       this.subscription = this.customerDao.findAllWhereIsTyping().pipe(
+  //         map(changes => changes.map(c => ({...c.payload.doc.data()})))).subscribe(data => {
+  //         this.typingCustomers = data.filter(customer => customer.name !== user.displayName);
+  //       });
+  //       this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => {
+  //         this.messageTo = to;
+  //       });
+  //     }
+  //   });
+  // }
+
   ngOnInit(): void {
     this.messageForm = new FormGroup({body: new FormControl('', Validators.required)});
-    this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
-      if (user) {
-        this.subscription = this.customerDao.findAllWhereIsTyping().pipe(
-          map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
-          this.typingCustomers = data.filter(customer => customer.name !== user.displayName);
-        });
-        this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => {
-          this.messageTo = to;
-        });
-      }
+    this.subscription = this.customerDao.findAllWhereIsTyping().pipe(
+      map(changes => changes.map(c => ({...c.payload.doc.data()})))).subscribe(data => {
+      this.typingCustomers = data.filter(customer => customer.name !== this.customer.name);
     });
+    this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => {
+      this.messageTo = to;
+    });
+    this.authService.customerEventEmitter.subscribe(customer => this.customer = customer);
   }
 
   ngOnDestroy(): void {
     this.subscriptionMessageTo.unsubscribe();
     this.subscription.unsubscribe();
-    this.subscriptionAuth.unsubscribe();
+    // this.subscriptionAuth.unsubscribe();
   }
 
   onClickSendMessage(): void {
@@ -57,13 +72,19 @@ export class MessageComponent implements OnInit, OnDestroy {
     const customer = JSON.parse(localStorage.getItem('customer'));
     const body = this.messageForm.value.body;
     const message = new Message(customer.name, body, (new Date()).getTime(), this.messageTo);
-    this.messageDao.save(message).then( () => {
-        this.messageForm.reset();
-        customer.newMessages.push(message.to);
-        console.log('dans message, cust = ', customer);
-        this.customerDao.save(customer).then();
-      }
-    );
+    this.messageDao.save(message).then(() => {
+      this.messageForm.reset();
+      console.log('dans message, cust1 = ', this.customer);
+      this.customer.newMessages.push(message.to);
+      this.customer.newMessages.push(message.to);
+      console.log('dans message, cust2 = ', this.customer);
+      this.customerDao.save(this.customer).then(() => console.log('dans message, cust3 = ', this.customer));
+    });
+    // this.messageDao.save(message).then(() => {
+    //   this.messageForm.reset();
+    //   console.log('dans message, cust1 = ', this.customer);
+    //   this.customerDao.addNewMessage(this.customer.name, message.to).then(() => console.log('dans message, cust3 = ', this.customer));
+    // });
   }
 
   public onKeyDown(): void {
@@ -82,9 +103,13 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   private saveCustomer(): void {
-    const customer = JSON.parse(localStorage.getItem('customer'));
-    customer.isTyping = this.isTyping;
-    this.customerDao.save(customer).then();
+    // const customer = JSON.parse(localStorage.getItem('customer'));
+    // customer.isTyping = this.isTyping;
+    // this.customerDao.save(customer).then();
+    console.log('dans message, isTyping customer1 = ', this.customer);
+    this.customerDao.updateIsTyping(this.customer.name, this.isTyping).then(() =>
+      console.log('dans message, isTyping customer2 = ', this.customer)
+    );
   }
 
 }
