@@ -1,11 +1,11 @@
+import {Message} from '../message/message';
 
-// https://fireship.io/lessons/firestore-cloud-functions-data-aggregation/
 export class Customer {
 
   name: string;
   connected = false;
   isTyping = false;
-  newMessages: string[] = [];
+  newMessages: Message[] = [];
 
   constructor(name: string, connected: boolean) {
     this.name = name;

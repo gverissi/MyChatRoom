@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {map} from 'rxjs/operators';
 import {Customer} from '../../entities/customer/customer';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 import {Subscription} from 'rxjs';
@@ -12,29 +11,37 @@ import {AuthService} from '../../services/auth/auth.service';
 })
 export class CustomersComponent implements OnInit, OnDestroy {
 
-  customers: Customer[] = [];
-  subscription: Subscription;
-  subscriptionAuth: Subscription;
-
   @Input()  messageToInCustomers: string;
   @Output() messageToInCustomersChange = new EventEmitter<string>();
 
+  customerName: string = null;
+
+  subscriptionAuth: Subscription;
+
+  subscriptionFindAllCustomers: Subscription;
+  customers: Customer[] = [];
+  subscriptionFindByName: Subscription;
+  nbNewMessages = 0;
+
   constructor(private customerDao: CustomerDaoService, private authService: AuthService) {
+    this.customerName = localStorage.getItem('customerName');
   }
 
   ngOnInit(): void {
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
-        this.subscription = this.customerDao.findAll().pipe(
-          map(changes => changes.map(c => ({ ...c.payload.doc.data() })))).subscribe(data => {
-          this.customers = data.filter(c => c.name !== user.displayName).sort();
+        this.subscriptionFindAllCustomers = this.customerDao.findAll().subscribe(customers => this.customers = customers);
+        this.subscriptionFindByName = this.customerDao.findByName(this.customerName).subscribe(actualCustomer => {
+          const messages = actualCustomer.newMessages.filter(message => message.to === '-');
+          this.nbNewMessages = messages.length;
         });
       }
     });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptionFindByName.unsubscribe();
+    this.subscriptionFindAllCustomers.unsubscribe();
     this.subscriptionAuth.unsubscribe();
   }
 

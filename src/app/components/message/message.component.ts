@@ -20,77 +20,53 @@ export class MessageComponent implements OnInit, OnDestroy {
   timeoutUp: number;
   isTyping = false;
   typingCustomers: Customer[] = [];
-  subscription: Subscription;
+  subscriptionIsTyping: Subscription;
   subscriptionAuth: Subscription;
   subscriptionMessageTo: Subscription;
 
   @Input() messageToObservableInMessage: Observable<string>;
-  // @Input() customer: Customer;
-  customer: Customer = null;
+  customerName: string = null;
 
   messageTo = '-';
 
   constructor(private messageDao: MessageDaoService, private customerDao: CustomerDaoService, private authService: AuthService) {
+    this.customerName = localStorage.getItem('customerName');
   }
-
-  // ngOnInit(): void {
-  //   this.messageForm = new FormGroup({body: new FormControl('', Validators.required)});
-  //   this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
-  //     if (user) {
-  //       this.subscription = this.customerDao.findAllWhereIsTyping().pipe(
-  //         map(changes => changes.map(c => ({...c.payload.doc.data()})))).subscribe(data => {
-  //         this.typingCustomers = data.filter(customer => customer.name !== user.displayName);
-  //       });
-  //       this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => {
-  //         this.messageTo = to;
-  //       });
-  //     }
-  //   });
-  // }
 
   ngOnInit(): void {
     this.messageForm = new FormGroup({body: new FormControl('', Validators.required)});
-    this.subscription = this.customerDao.findAllWhereIsTyping().pipe(
-      map(changes => changes.map(c => ({...c.payload.doc.data()})))).subscribe(data => {
-      this.typingCustomers = data.filter(customer => customer.name !== this.customer.name);
+    this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
+      if (user) {
+        this.subscriptionIsTyping = this.customerDao.findAllWhereIsTyping().pipe(
+          map(changes => changes.map(c => ({...c.payload.doc.data()})))).subscribe(data =>
+          this.typingCustomers = data.filter(customer => customer.name !== user.displayName)
+        );
+      }
     });
-    this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => {
-      this.messageTo = to;
-    });
-    this.authService.customerEventEmitter.subscribe(customer => this.customer = customer);
+    this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => this.messageTo = to);
   }
 
   ngOnDestroy(): void {
+    this.subscriptionIsTyping.unsubscribe();
     this.subscriptionMessageTo.unsubscribe();
-    this.subscription.unsubscribe();
-    // this.subscriptionAuth.unsubscribe();
+    this.subscriptionAuth.unsubscribe();
   }
 
   onClickSendMessage(): void {
     this.isTyping = false;
-    this.saveCustomer();
-    const customer = JSON.parse(localStorage.getItem('customer'));
+    this.updateCustomer();
     const body = this.messageForm.value.body;
-    const message = new Message(customer.name, body, (new Date()).getTime(), this.messageTo);
+    const message = new Message(this.customerName, body, (new Date()).getTime(), this.messageTo);
     this.messageDao.save(message).then(() => {
       this.messageForm.reset();
-      console.log('dans message, cust1 = ', this.customer);
-      this.customer.newMessages.push(message.to);
-      this.customer.newMessages.push(message.to);
-      console.log('dans message, cust2 = ', this.customer);
-      this.customerDao.save(this.customer).then(() => console.log('dans message, cust3 = ', this.customer));
+      this.customerDao.addNewMessage(this.customerName, message.to, message);
     });
-    // this.messageDao.save(message).then(() => {
-    //   this.messageForm.reset();
-    //   console.log('dans message, cust1 = ', this.customer);
-    //   this.customerDao.addNewMessage(this.customer.name, message.to).then(() => console.log('dans message, cust3 = ', this.customer));
-    // });
   }
 
   public onKeyDown(): void {
     if (!this.isTyping) {
       this.isTyping = true;
-      this.saveCustomer();
+      this.updateCustomer();
     }
   }
 
@@ -98,18 +74,12 @@ export class MessageComponent implements OnInit, OnDestroy {
     clearTimeout(this.timeoutUp);
     this.timeoutUp = setTimeout(() => {
       this.isTyping = false;
-      this.saveCustomer();
+      this.updateCustomer();
     }, 4000);
   }
 
-  private saveCustomer(): void {
-    // const customer = JSON.parse(localStorage.getItem('customer'));
-    // customer.isTyping = this.isTyping;
-    // this.customerDao.save(customer).then();
-    console.log('dans message, isTyping customer1 = ', this.customer);
-    this.customerDao.updateIsTyping(this.customer.name, this.isTyping).then(() =>
-      console.log('dans message, isTyping customer2 = ', this.customer)
-    );
+  private updateCustomer(): void {
+    this.customerDao.updateIsTyping(this.customerName, this.isTyping);
   }
 
 }

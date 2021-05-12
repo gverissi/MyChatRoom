@@ -1,30 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Customer} from '../../entities/customer/customer';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../services/auth/auth.service';
+import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.css']
 })
-export class CustomerComponent implements OnInit {
+export class CustomerComponent implements OnInit, OnDestroy {
 
-  @Input()
-  customer: Customer;
+  @Input() customer: Customer;
 
-  subscriptionAuth: Subscription;
+  customerName: string = null;
+  subscriptionFindByName: Subscription;
   nbNewMessages = 0;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private customerDao: CustomerDaoService) {
+    this.customerName = localStorage.getItem('customerName');
+  }
 
   ngOnInit(): void {
-    this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
-      if (user) {
-        const messages = this.customer.newMessages.filter(to => to === user.displayName);
-        this.nbNewMessages = messages.length;
-      }
+    this.subscriptionFindByName = this.customerDao.findByName(this.customerName).subscribe(actualCustomer => {
+      const messages = actualCustomer.newMessages.filter(message =>
+        (message.from === this.customer.name) && (message.to === this.customerName)
+      );
+      this.nbNewMessages = messages.length;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionFindByName.unsubscribe();
   }
 
 }
