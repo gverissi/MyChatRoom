@@ -5,11 +5,15 @@
 }
 
 .container {
-  margin: 10px 0;
-  padding: 10px 0 10px 10px;
+  margin: 5px 0;
+  padding: 10px;
 }
 
 .container:hover {
+  background-color: #444;
+}
+
+.container-flex:hover {
   background-color: #444;
 }
 
@@ -26,9 +30,44 @@ app-customer {
 }
 
 .cursor {
+  margin: 5px 0;
   cursor: pointer;
+  padding: 10px;
+}
+
+.border {
+  border-bottom: #444 solid 2px;
 }
 
 .is-selected {
-  background-color: #4CAF50;
+  background-color: #444;
+}
+
+
+.container-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mr-6 {
+  margin-right: 6px;
+}
+
+.nb-new-messages {
+  color: white;
+  border-radius: 50%;
+  background-color: #008CBA;
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
+.hidden {
+  visibility: hidden;
 }

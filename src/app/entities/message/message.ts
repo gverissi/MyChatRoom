@@ -1,6 +1,7 @@
 
 export class Message {
 
+  id: string;
   from: string;
   body: string;
   date: number;

@@ -1,6 +1,10 @@
 
-<div>
-  <span [ngClass]="{'dot': true, 'connected': customer.connected}"></span>
-  <p>{{customer.name}}</p>
-  <p>{{nbNewMessages}}</p>
+<div class="container">
+  <div class="container">
+    <span [ngClass]="{'dot': true, 'connected': customer.connected}"></span>
+    <p>{{customer.name}}</p>
+  </div>
+  <div class="nb-new-messages" [ngClass]="{'hidden': nbNewMessages < 1}">
+    {{nbNewMessages}}
+  </div>
 </div>

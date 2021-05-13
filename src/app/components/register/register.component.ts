@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
     const name = this.userRegisterForm.value.name;
     const password = this.userRegisterForm.value.password;
     this.authService.register(name, password).then(
-      () => this.router.navigate(['/dashboard']),
+      () => this.router.navigate(['/home']),
       (error) => console.log(error)
     );
   }

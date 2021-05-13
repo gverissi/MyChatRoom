@@ -4,8 +4,7 @@
   max-height: calc(100vh - 184px);
 }
 
-a {
-  text-decoration: none;
+.name {
   color: white;
   font-weight: bold;
   display: inline-block;
@@ -29,5 +28,9 @@ p {
 }
 
 .container:hover {
+  background-color: #444;
+}
+
+.contains {
   background-color: #444;
 }

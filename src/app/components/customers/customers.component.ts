@@ -30,7 +30,9 @@ export class CustomersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
-        this.subscriptionFindAllCustomers = this.customerDao.findAll().subscribe(customers => this.customers = customers);
+        this.subscriptionFindAllCustomers = this.customerDao.findAll().subscribe(customers =>
+          this.customers = customers.filter(customer => customer.name !== this.customerName)
+        );
         this.subscriptionFindByName = this.customerDao.findByName(this.customerName).subscribe(actualCustomer => {
           const messages = actualCustomer.newMessages.filter(message => message.to === '-');
           this.nbNewMessages = messages.length;

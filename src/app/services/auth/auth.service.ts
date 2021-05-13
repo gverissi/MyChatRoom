@@ -17,7 +17,7 @@ export class AuthService {
 
   constructor(private angularFireAuth: AngularFireAuth, private customerDao: CustomerDaoService) {
     this.angularFireAuth.authState.subscribe(user => {
-      if (user) {
+      if (user && user.displayName) {
         this.subscription = this.customerDao.findByName(user.displayName).subscribe(customer => {
           this.customerEventEmitter.emit(customer);
           localStorage.setItem('customerName', customer.name);
@@ -39,10 +39,14 @@ export class AuthService {
   }
 
   public register(name: string, password: string): Promise<string | void> {
-    const customer = new Customer(name, true);
+    const customer = new Customer(name, false);
     const email = name + this.mailSuffix;
     return this.angularFireAuth.createUserWithEmailAndPassword(email, password).then((userCred) =>
-      userCred.user.updateProfile({ displayName: name }).then(() => this.customerDao.save(customer))
+      userCred.user.updateProfile({ displayName: name }).then(() =>
+        this.customerDao.save(customer).then(() =>
+          this.angularFireAuth.signOut()
+        )
+      )
     );
   }
 

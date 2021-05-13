@@ -50,6 +50,12 @@ export class CustomerDaoService {
     }
   }
 
+  removeNewMessage(customerName: string, message: Message): void {
+    const data = { newMessages: firebase.firestore.FieldValue.arrayRemove({ ...message }) };
+    // @ts-ignore
+    this.customerCollection.doc(customerName).update(data);
+  }
+
   findByName(name: string): Observable<Customer> {
     return this.customerCollection.doc(name).valueChanges();
   }

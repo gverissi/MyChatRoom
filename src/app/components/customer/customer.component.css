@@ -1,12 +1,19 @@
 
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+span {
+  margin-right: 10px;
+}
+
 .dot {
   height: 15px;
   width: 15px;
   background-color: darkred;
   border-radius: 50%;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 10px;
 }
 
 .connected {
@@ -17,6 +24,23 @@ p {
   margin: 0;
   color: white;
   font-weight: bold;
-  display: inline-block;
-  vertical-align: middle;
+  text-align: center;
+}
+
+.nb-new-messages {
+  color: white;
+  border-radius: 50%;
+  background-color: #008CBA;
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
+.hidden {
+  visibility: hidden;
 }

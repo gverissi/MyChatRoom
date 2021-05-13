@@ -1,13 +1,13 @@
 
 <div class="container">
   <as-split direction="horizontal" gutterSize="5">
-    <as-split-area size="10" minSize="10" maxSize="80">
+    <as-split-area size="15" maxSize="80">
       <div>
         <app-customers [messageToInCustomers]="messageToInDashboard"
                        (messageToInCustomersChange)="notifyMessageToChanged($event)"></app-customers>
       </div>
     </as-split-area>
-    <as-split-area size="90">
+    <as-split-area size="85">
       <div class="padding">
         <app-messages [messageToObservableInMessages]="messageToInDashboardEventEmitter"></app-messages>
         <app-message [messageToObservableInMessage]="messageToInDashboardEventEmitter"></app-message>
