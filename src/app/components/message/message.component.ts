@@ -5,7 +5,6 @@ import {Message} from '../../entities/message/message';
 import {Customer} from '../../entities/customer/customer';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 import {Observable, Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
@@ -37,9 +36,8 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.messageForm = new FormGroup({body: new FormControl('', Validators.required)});
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
-        this.subscriptionIsTyping = this.customerDao.findAllWhereIsTyping().pipe(
-          map(changes => changes.map(c => ({...c.payload.doc.data()})))).subscribe(data =>
-          this.typingCustomers = data.filter(customer => customer.name !== user.displayName)
+        this.subscriptionIsTyping = this.customerDao.findAllWhereIsTyping().subscribe(customers =>
+          this.typingCustomers = customers.filter(customer => customer.name !== this.customerName)
         );
       }
     });

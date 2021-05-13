@@ -1,6 +1,6 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import firebase from 'firebase';
 import User = firebase.User;
 import {CustomerDaoService} from '../customer-dao/customer-dao.service';
@@ -11,23 +11,14 @@ import {Customer} from '../../entities/customer/customer';
 })
 export class AuthService {
 
-  private mailSuffix = '123@gmail.fr';
-  private subscription: Subscription;
-  public customerEventEmitter = new EventEmitter<Customer>();
+  private emailSuffix = '123@gmail.fr';
 
   constructor(private angularFireAuth: AngularFireAuth, private customerDao: CustomerDaoService) {
     this.angularFireAuth.authState.subscribe(user => {
-      if (user && user.displayName) {
-        this.subscription = this.customerDao.findByName(user.displayName).subscribe(customer => {
-          this.customerEventEmitter.emit(customer);
-          localStorage.setItem('customerName', customer.name);
-          localStorage.setItem('isCustomerLoggedIn', JSON.stringify(true));
-        });
+      if (user) {
+        localStorage.setItem('customerName', user.email.slice(0, -this.emailSuffix.length));
+        localStorage.setItem('isCustomerLoggedIn', JSON.stringify(true));
       } else {
-        if (this.subscription) {
-          this.subscription.unsubscribe();
-        }
-        this.customerEventEmitter.emit(null);
         localStorage.setItem('customerName', JSON.stringify(null));
         localStorage.setItem('isCustomerLoggedIn', JSON.stringify(false));
       }
@@ -39,21 +30,24 @@ export class AuthService {
   }
 
   public register(name: string, password: string): Promise<string | void> {
-    const customer = new Customer(name, false);
-    const email = name + this.mailSuffix;
-    return this.angularFireAuth.createUserWithEmailAndPassword(email, password).then((userCred) =>
-      userCred.user.updateProfile({ displayName: name }).then(() =>
-        this.customerDao.save(customer).then(() =>
-          this.angularFireAuth.signOut()
-        )
-      )
+    const customer = new Customer(name, true);
+    const email = name + this.emailSuffix;
+    return this.angularFireAuth.createUserWithEmailAndPassword(email, password).then(
+      (userCred) =>
+        userCred.user.updateProfile({ displayName: name }).then(() =>
+          this.customerDao.save(customer)
+        ),
+      (error) => {
+        console.log('Error during registration: ', error);
+        localStorage.setItem('customerName', JSON.stringify(null));
+      }
     );
   }
 
   public logIn(name: string, password: string): Promise<string | void> {
-    const email = name + this.mailSuffix;
-    return this.angularFireAuth.signInWithEmailAndPassword(email, password).then((userCred) =>
-      this.customerDao.updateConnected(userCred.user.displayName, true)
+    const email = name + this.emailSuffix;
+    return this.angularFireAuth.signInWithEmailAndPassword(email, password).then(() =>
+      this.customerDao.updateConnected(name, true)
     );
   }
 

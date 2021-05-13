@@ -12,7 +12,7 @@ import {Router} from '@angular/router';
 export class NavbarComponent implements OnInit, OnDestroy {
 
   isLoggedIn: boolean;
-  userName: string;
+  customerName: string;
   subscription: Subscription;
 
   constructor(private authService: AuthService, private userDao: CustomerDaoService, private router: Router) { }
@@ -21,10 +21,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.subscription = this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.isLoggedIn = true;
-        this.userName = user.displayName;
+        this.customerName = localStorage.getItem('customerName');
       } else {
         this.isLoggedIn = false;
-        this.userName = 'not-logged';
+        this.customerName = 'not-logged';
       }
     });
   }

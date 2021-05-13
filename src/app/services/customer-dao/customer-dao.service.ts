@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from '@angular/fire/firestore';
+import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import {Customer} from '../../entities/customer/customer';
 import {Observable} from 'rxjs';
 import firebase from 'firebase/app';
@@ -64,8 +64,8 @@ export class CustomerDaoService {
     return this.customerCollection.valueChanges();
   }
 
-  findAllWhereIsTyping(): Observable<DocumentChangeAction<Customer>[]> {
-    return this.db.collection<Customer>(this.collectionName, ref => ref.where('isTyping', '==', true)).snapshotChanges();
+  findAllWhereIsTyping(): Observable<Customer[]> {
+    return this.db.collection<Customer>(this.collectionName, ref => ref.where('isTyping', '==', true)).valueChanges();
   }
 
 }

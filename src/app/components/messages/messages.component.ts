@@ -21,13 +21,16 @@ export class MessagesComponent implements OnInit, OnDestroy {
   subscriptionMessageTo: Subscription;
   subscriptionCustomer: Subscription;
 
+  customerName: string;
   customer: Customer;
   unreadMessages: Message[];
 
   @Input()  messageToObservableInMessages: Observable<string>;
   messageTo = '-';
 
-  constructor(private messageDao: MessageDaoService, private authService: AuthService, private customerDao: CustomerDaoService) { }
+  constructor(private messageDao: MessageDaoService, private authService: AuthService, private customerDao: CustomerDaoService) {
+    this.customerName = localStorage.getItem('customerName');
+  }
 
   ngOnInit(): void {
     this.subscribe();
@@ -41,11 +44,11 @@ export class MessagesComponent implements OnInit, OnDestroy {
   subscribe(): void {
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
-        this.subscriptionMessages = this.messageDao.findAllWhereFromTo(user.displayName, this.messageTo).subscribe(messages => {
+        this.subscriptionMessages = this.messageDao.findAllWhereFromTo(this.customerName, this.messageTo).subscribe(messages => {
           this.messages = messages.sort((a: Message, b: Message) => a.date - b.date);
           this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
         });
-        this.subscriptionCustomer = this.customerDao.findByName(user.displayName).subscribe(customer => {
+        this.subscriptionCustomer = this.customerDao.findByName(this.customerName).subscribe(customer => {
           this.customer = customer;
           this.unreadMessages = this.customer.newMessages;
         });
@@ -69,10 +72,16 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   unreadMessageContains(message: Message): boolean {
-    return this.unreadMessages.some(unreadMessage => unreadMessage.id === message.id);
+    if (this.unreadMessages) {
+      return this.unreadMessages.some(unreadMessage => unreadMessage.id === message.id);
+    } else {
+      return false;
+    }
   }
 
   mouseEnter(message: Message): void {
-    this.customerDao.removeNewMessage(this.customer.name, message);
+    if (this.unreadMessageContains(message)) {
+      this.customerDao.removeNewMessage(this.customer.name, message);
+    }
   }
 }
