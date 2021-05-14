@@ -5,6 +5,6 @@
   </div>
   <div class="container" *ngFor="let message of messages" [ngClass]="{'contains': unreadMessageContains(message)}" (mouseenter) ="mouseEnter(message) ">
     <p class="name">{{message.from}}</p><p class="info">{{getDate(message.date) | date:'dd/MM/YYYY'}} at {{getDate(message.date) | date:'HH:mm'}}</p>
-    <p>{{message.body}}</p>
+    <p class="message">{{message.body}}</p>
   </div>
 </div>

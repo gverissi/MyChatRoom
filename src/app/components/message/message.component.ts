@@ -51,14 +51,19 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   onClickSendMessage(): void {
-    this.isTyping = false;
-    this.updateCustomer();
     const body = this.messageForm.value.body;
-    const message = new Message(this.customerName, body, (new Date()).getTime(), this.messageTo);
-    this.messageDao.save(message).then(() => {
+    if (body) {
+      this.isTyping = false;
+      this.updateCustomer();
+      const message = new Message(this.customerName, body, (new Date()).getTime(), this.messageTo);
+      this.messageDao.save(message).then(() => {
+        this.messageForm.reset();
+        this.customerDao.addNewMessage(this.customerName, message.to, message);
+      });
+    } else {
+      console.log('reset');
       this.messageForm.reset();
-      this.customerDao.addNewMessage(this.customerName, message.to, message);
-    });
+    }
   }
 
   public onKeyDown(): void {

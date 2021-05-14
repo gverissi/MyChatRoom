@@ -34,3 +34,7 @@ p {
 .contains {
   background-color: #444;
 }
+
+.message {
+  white-space: pre-wrap;
+}
