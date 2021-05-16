@@ -3,6 +3,7 @@ import {Title} from '@angular/platform-browser';
 import {AuthService} from './services/auth/auth.service';
 import {CustomerDaoService} from './services/customer-dao/customer-dao.service';
 import {Subscription} from 'rxjs';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
   favIcon: HTMLLinkElement = document.querySelector('#appIcon');
 
   public constructor(private titleService: Title, private authService: AuthService, private customerDao: CustomerDaoService) {
+    console.log('environment.production = ', environment.production);
   }
 
   ngOnInit(): void {
