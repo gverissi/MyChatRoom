@@ -1,5 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MessageDaoService} from '../../services/message-dao/message-dao.service';
 import {Message} from '../../entities/message/message';
 import {Customer} from '../../entities/customer/customer';
@@ -12,9 +11,11 @@ import {AuthService} from '../../services/auth/auth.service';
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.css']
 })
-export class MessageComponent implements OnInit, OnDestroy {
+export class MessageComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  messageForm: FormGroup;
+  @Input() messageToObservableInMessage: Observable<string>;
+  @ViewChild('message') textAreaInputField: ElementRef;
+
   timeoutDown: number;
   timeoutUp: number;
   isTyping = false;
@@ -22,18 +23,15 @@ export class MessageComponent implements OnInit, OnDestroy {
   subscriptionIsTyping: Subscription;
   subscriptionAuth: Subscription;
   subscriptionMessageTo: Subscription;
-
-  @Input() messageToObservableInMessage: Observable<string>;
   customerName: string = null;
-
   messageTo = '-';
+  messageBody = '';
 
   constructor(private messageDao: MessageDaoService, private customerDao: CustomerDaoService, private authService: AuthService) {
     this.customerName = localStorage.getItem('customerName');
   }
 
   ngOnInit(): void {
-    this.messageForm = new FormGroup({body: new FormControl('', Validators.required)});
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.subscriptionIsTyping = this.customerDao.findAllWhereIsTyping().subscribe(customers =>
@@ -41,7 +39,14 @@ export class MessageComponent implements OnInit, OnDestroy {
         );
       }
     });
-    this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => this.messageTo = to);
+    this.subscriptionMessageTo = this.messageToObservableInMessage.subscribe(to => {
+      this.messageTo = to;
+      this.textAreaInputField.nativeElement.focus();
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.textAreaInputField.nativeElement.focus();
   }
 
   ngOnDestroy(): void {
@@ -50,20 +55,23 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.subscriptionAuth.unsubscribe();
   }
 
-  onClickSendMessage(): void {
-    const body = this.messageForm.value.body;
-    if (body) {
+  sendMessage(): void {
+    const body = this.messageBody.trim();
+    if (body !== '') {
       this.isTyping = false;
       this.updateCustomer();
       const message = new Message(this.customerName, body, (new Date()).getTime(), this.messageTo);
       this.messageDao.save(message).then(() => {
-        this.messageForm.reset();
+        this.messageBody = '';
         this.customerDao.addNewMessage(this.customerName, message.to, message);
       });
     } else {
-      console.log('reset');
-      this.messageForm.reset();
+      this.messageBody = '';
     }
+  }
+
+  clearTextArea(): void {
+    this.messageBody = '';
   }
 
   public onKeyDown(): void {

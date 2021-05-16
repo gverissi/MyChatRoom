@@ -6,7 +6,4 @@
   <p class="info hidden">hidden</p>
 </div>
 
-<form [formGroup]="messageForm">
-  <textarea formControlName="body" rows="3" (keydown)="onKeyDown()" (keyup)="onKeyUp()" (keydown.enter)="onClickSendMessage()"></textarea>
-  <button type="button" (click)="onClickSendMessage()" [disabled]="messageForm.invalid">Send</button>
-</form>
+<textarea #message [(ngModel)]="messageBody" rows="3" (keydown)="onKeyDown()" (keyup)="onKeyUp()" (keydown.enter)="sendMessage()" (keyup.enter)="clearTextArea()"></textarea>

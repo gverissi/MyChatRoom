@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
 // Components
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/register/register.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
@@ -57,7 +57,8 @@ const appRoutes: Routes = [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    AngularSplitModule
+    AngularSplitModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
