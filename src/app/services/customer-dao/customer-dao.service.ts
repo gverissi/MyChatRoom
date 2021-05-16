@@ -27,6 +27,11 @@ export class CustomerDaoService {
     return this.customerCollection.doc(customerName).update(data);
   }
 
+  updateChannel(customerName: string, channel$: string): Promise<void> {
+    const data = { channel: channel$ };
+    return this.customerCollection.doc(customerName).update(data);
+  }
+
   updateIsTyping(customerName: string, isTyping$: boolean): Promise<void> {
     const data = { isTyping: isTyping$ };
     return this.customerCollection.doc(customerName).update(data);

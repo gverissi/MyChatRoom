@@ -6,6 +6,7 @@ export class Customer {
   connected = false;
   isTyping = false;
   newMessages: Message[] = [];
+  channel = '';
 
   constructor(name: string, connected: boolean) {
     this.name = name;

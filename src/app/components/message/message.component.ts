@@ -35,7 +35,10 @@ export class MessageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscriptionAuth = this.authService.getAuthState().subscribe(user => {
       if (user) {
         this.subscriptionIsTyping = this.customerDao.findAllWhereIsTyping().subscribe(customers =>
-          this.typingCustomers = customers.filter(customer => customer.name !== this.customerName)
+          this.typingCustomers = customers.filter(customer =>
+            customer.name !== this.customerName &&
+            (customer.channel === this.messageTo || (customer.channel === this.customerName && customer.name === this.messageTo))
+          )
         );
       }
     });

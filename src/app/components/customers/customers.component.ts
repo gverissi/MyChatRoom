@@ -37,6 +37,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
           const messages = actualCustomer.newMessages.filter(message => message.to === '-');
           this.nbNewMessages = messages.length;
         });
+        this.customerDao.updateChannel(this.customerName, '-');
       }
     });
   }
@@ -50,6 +51,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
   changeCustomerNameForMassageTo(customerName: string): void {
     this.messageToInCustomers = customerName;
     this.messageToInCustomersChange.emit(this.messageToInCustomers);
+    this.customerDao.updateChannel(this.customerName, customerName);
   }
 
 }
