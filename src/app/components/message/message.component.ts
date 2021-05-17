@@ -5,6 +5,7 @@ import {Customer} from '../../entities/customer/customer';
 import {CustomerDaoService} from '../../services/customer-dao/customer-dao.service';
 import {Observable, Subscription} from 'rxjs';
 import {AuthService} from '../../services/auth/auth.service';
+import Timeout = NodeJS.Timeout;
 
 @Component({
   selector: 'app-message',
@@ -16,8 +17,8 @@ export class MessageComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() messageToObservableInMessage: Observable<string>;
   @ViewChild('message') textAreaInputField: ElementRef;
 
-  timeoutDown: number;
-  timeoutUp: number;
+  timeoutDown: Timeout;
+  timeoutUp: Timeout;
   isTyping = false;
   typingCustomers: Customer[] = [];
   subscriptionIsTyping: Subscription;
