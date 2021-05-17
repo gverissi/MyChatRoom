@@ -1,6 +1,6 @@
 # MyChatRoom
 
-Demo project using angular for an online chat app.  
+Demo project using angular for an [online chat app](https://greg-chat-room.netlify.app/home).  
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.11.
 
 # Get Started Locally

@@ -22,7 +22,8 @@
             "assets": [
               "src/favicon.ico",
               "src/favicon-red.ico",
-              "src/assets"
+              "src/assets",
+              "src/_redirects"
             ],
             "styles": [
               "src/styles.css"
